@@ -7,11 +7,11 @@
     body {
       margin: 0;
       height: 100vh;
-      background-color: #2ecc71; /* verde */
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 10%;
+      transition: background-color 0.3s, background-image 0.3s;
     }
     .team {
       display: flex;
@@ -24,8 +24,6 @@
       border-radius: 50%;
       cursor: pointer;
     }
-    .red { background: red; }
-    .blue { background: blue; }
     .gray { background: gray !important; }
   </style>
 </head>
@@ -34,6 +32,23 @@
   <div class="team" id="heroes"></div>
 
   <script>
+    // ---------- BACKGROUND ----------
+    async function loadBackground(configPath) {
+      const res = await fetch(configPath);
+      const backgrounds = await res.json();
+      const bg = backgrounds[0]; // default primo
+
+      if (bg.image) {
+        document.body.style.background = `url(${bg.image}) center/cover no-repeat`;
+      } else {
+        const colors = { wood: '#2ecc71', cave: '#7f8c8d' };
+        document.body.style.backgroundColor = colors[bg.name] || '#2ecc71';
+      }
+    }
+
+    loadBackground('background.json');
+
+    // ---------- TEAM ----------
     async function loadTeam(containerId, configPath, color) {
       const container = document.getElementById(containerId);
       const res = await fetch(configPath);
