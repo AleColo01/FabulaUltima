@@ -241,11 +241,14 @@
 
       document.querySelectorAll('.char').forEach(c => {
         if (c.dataset.big === "true") {
-          c.style.width = (baseSize*2) + 'px';  // doppia larghezza
-          c.style.height = baseSize + 'px';      // altezza normale
+          // dimensione doppia reale
+          c.style.width = (baseSize*2) + 'px';
+          c.style.height = (baseSize*2) + 'px';
+          c.style.backgroundSize = 'cover'; // per evitare sgranatura
         } else {
           c.style.width = baseSize + 'px';
           c.style.height = baseSize + 'px';
+          c.style.backgroundSize = 'cover';
         }
       });
     }
