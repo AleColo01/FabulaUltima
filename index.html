@@ -9,14 +9,16 @@
       height: 100vh;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-end; /* allinea i team in basso */
       padding: 0 10%;
+      padding-bottom: 10%; /* distanza dal fondo */
       transition: background-color 0.3s, background-image 0.3s;
     }
+
     .team {
       display: flex;
-      flex-direction: column;
-      gap: 20px;
+      flex-direction: row; /* da colonna a riga */
+      gap: 20px; /* spazio tra i personaggi */
     }
     .char {
       width: 60px;
