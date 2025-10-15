@@ -4,5 +4,5 @@
   { "name": "Bred", "image": "" },
   { "name": "Franky", "image": "" },
   { "name": "Allan", "image": "" },
-  { "name": "Teo", "image": "" }
+  { "name": "Teo", "image": "res/background/teo.png" }
 ]
