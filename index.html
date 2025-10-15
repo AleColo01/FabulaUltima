@@ -48,7 +48,7 @@
       padding: 20px;
       display: none;
       border-radius: 8px;
-      max-width: 250px;
+      max-width: 300px;
       z-index: 100;
     }
 
@@ -86,13 +86,8 @@
       enemiesData = await loadJSON('enemies.json');
       backgroundsData = await loadJSON('background.json');
 
-      // Default background
       applyBackground(0);
-
-      // Render settings
       renderSettings();
-
-      // Render team
       renderTeams();
     }
 
@@ -114,9 +109,15 @@
       heroesContainer.innerHTML = '';
       enemiesContainer.innerHTML = '';
 
-      // Mostra solo quelli selezionati
-      heroesData.filter(h => h.show !== false).forEach(m => addChar(heroesContainer, m, 'blue'));
-      enemiesData.filter(e => e.show !== false).forEach(m => addChar(enemiesContainer, m, 'red'));
+      heroesData.filter(h => h.show !== false)
+        .forEach(m => addChar(heroesContainer, m, 'blue'));
+
+      enemiesData.filter(e => e.show !== false).forEach(m => {
+        const copies = m.copies || 1;
+        for (let i = 0; i < copies; i++) {
+          addChar(enemiesContainer, m, 'red');
+        }
+      });
     }
 
     function addChar(container, m, color) {
@@ -144,12 +145,12 @@
     }
 
     function renderSettings() {
-      // Toggle modal
       document.getElementById('settings-btn').onclick = () => {
         const modal = document.getElementById('settings-modal');
         modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
       };
 
+      // Background
       const bgContainer = document.getElementById('bg-options');
       bgContainer.innerHTML = '';
       backgroundsData.forEach((bg, i) => {
@@ -159,6 +160,7 @@
         bgContainer.appendChild(label);
       });
 
+      // Eroi
       const heroContainer = document.getElementById('hero-options');
       heroContainer.innerHTML = '';
       heroesData.forEach((h, i) => {
@@ -168,13 +170,38 @@
         heroContainer.appendChild(label);
       });
 
+      // Nemici
       const enemyContainer = document.getElementById('enemy-options');
       enemyContainer.innerHTML = '';
       enemiesData.forEach((e, i) => {
-        const label = document.createElement('label');
-        label.innerHTML = `<input type="checkbox" ${e.show!==false?'checked':''}> ${e.name}`;
-        label.querySelector('input').onchange = (e2) => { e.show = e2.target.checked; renderTeams(); };
-        enemyContainer.appendChild(label);
+        const wrapper = document.createElement('div');
+        wrapper.style.display = 'flex';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.gap = '4px';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = e.show !== false;
+        checkbox.onchange = (ev) => { e.show = ev.target.checked; renderTeams(); };
+        wrapper.appendChild(checkbox);
+
+        const label = document.createElement('span');
+        label.textContent = e.name;
+        wrapper.appendChild(label);
+
+        const countInput = document.createElement('input');
+        countInput.type = 'number';
+        countInput.min = 1;
+        countInput.value = e.copies || 1;
+        countInput.style.width = '40px';
+        countInput.onchange = (ev) => {
+          const n = parseInt(ev.target.value) || 1;
+          e.copies = n;
+          renderTeams();
+        };
+        wrapper.appendChild(countInput);
+
+        enemyContainer.appendChild(wrapper);
       });
     }
 
