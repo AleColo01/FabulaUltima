@@ -143,15 +143,19 @@
 
       const img = document.createElement('div');
       img.classList.add('char');
+
+      if (m.image) {
+        img.dataset.big = "true";
+        img.style.borderRadius = "0"; // niente arrotondamento
+      } else {
+        img.dataset.big = "false";
+        img.style.borderRadius = "50%"; // cerchio
+      }
+
       img.style.background = m.image ? `url(${m.image}) center/cover no-repeat` : color;
 
-      // Dimensione doppia se c'è immagine
-      if (m.image) img.dataset.big = "true";
-
-      // Flip orizzontale se specificato nel JSON
-      if (m.flipped) {
-        img.style.transform = "scaleX(-1)";
-      }
+      // Flip orizzontale se specificato
+      if (m.flipped) img.style.transform = "scaleX(-1)";
 
       img.addEventListener('click', () => img.classList.toggle('gray'));
 
@@ -165,6 +169,7 @@
       wrapper.appendChild(name);
       container.appendChild(wrapper);
     }
+
 
     function renderSettings() {
       document.getElementById('settings-btn').onclick = () => {
@@ -230,15 +235,17 @@
     // Aggiorna dimensione cerchi in base alla larghezza dello schermo
     function updateCharSize() {
       const maxCircles = 15;
-      const gap = 20; // gap tra cerchi
-      const padding = window.innerWidth * 0.2; // 10% per lato
+      const gap = 20; 
+      const padding = window.innerWidth * 0.2; 
       const baseSize = Math.min(60, Math.max(30, (window.innerWidth - padding - gap*(maxCircles-1)) / maxCircles));
 
       document.querySelectorAll('.char').forEach(c => {
         if (c.dataset.big === "true") {
-          c.style.width = c.style.height = (baseSize*2) + 'px';
+          c.style.width = (baseSize*2) + 'px';  // doppia larghezza
+          c.style.height = baseSize + 'px';      // altezza normale
         } else {
-          c.style.width = c.style.height = baseSize + 'px';
+          c.style.width = baseSize + 'px';
+          c.style.height = baseSize + 'px';
         }
       });
     }
