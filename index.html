@@ -9,18 +9,19 @@
       height: 100vh;
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: flex-start; /* prima era flex-end */
       padding: 0 10%;
-      padding-bottom: 10%;
-      transition: background-color 0.3s, background-image 0.3s;
       position: relative;
+      background-color: #2ecc71;
     }
 
     .team {
       display: flex;
-      flex-wrap: wrap; /* permette di andare su due righe */
+      flex-wrap: wrap;
       gap: 20px;
       align-items: flex-start;
+      position: absolute;
+      bottom: 10%; /* spinge le squadre verso il basso */
     }
 
     .char-wrapper {
