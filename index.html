@@ -30,26 +30,47 @@
   </style>
 </head>
 <body>
-  <div class="team" id="red-team">
-    <div class="char red"></div>
-    <div class="char red"></div>
-    <div class="char red"></div>
-    <div class="char red"></div>
-  </div>
-
-  <div class="team" id="blue-team">
-    <div class="char blue"></div>
-    <div class="char blue"></div>
-    <div class="char blue"></div>
-    <div class="char blue"></div>
-  </div>
+  <div class="team" id="enemies"></div>
+  <div class="team" id="heroes"></div>
 
   <script>
-    document.querySelectorAll('.char').forEach(c => {
-      c.addEventListener('click', () => {
-        c.classList.toggle('gray');
+    async function loadTeam(containerId, configPath, color) {
+      const container = document.getElementById(containerId);
+      const res = await fetch(configPath);
+      const members = await res.json();
+
+      members.forEach(m => {
+        const div = document.createElement('div');
+        div.style.display = 'flex';
+        div.style.flexDirection = 'column';
+        div.style.alignItems = 'center';
+        div.style.gap = '4px';
+
+        const img = document.createElement('div');
+        img.classList.add('char');
+        if (m.image) {
+          img.style.background = `url(${m.image}) center/cover no-repeat`;
+          img.style.border = '2px solid #000';
+        } else {
+          img.style.background = color;
+        }
+
+        img.addEventListener('click', () => img.classList.toggle('gray'));
+
+        const name = document.createElement('div');
+        name.textContent = m.name;
+        name.style.color = '#fff';
+        name.style.fontSize = '14px';
+        name.style.textShadow = '1px 1px 2px black';
+
+        div.appendChild(img);
+        div.appendChild(name);
+        container.appendChild(div);
       });
-    });
+    }
+
+    loadTeam('heroes', 'heroes.json', 'blue');
+    loadTeam('enemies', 'enemies.json', 'red');
   </script>
 </body>
 </html>
