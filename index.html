@@ -1,11 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Fabula Ultima</title>
+  <title>JRPG Test</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background-color: #2ecc71; /* verde */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10%;
+    }
+    .team {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .char {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .red { background: red; }
+    .blue { background: blue; }
+    .gray { background: gray !important; }
+  </style>
 </head>
 <body>
-  <h1>Ciao dal mio sito su Vercel!</h1>
-  <p>Funziona 🎉</p>
+  <div class="team" id="red-team">
+    <div class="char red"></div>
+    <div class="char red"></div>
+    <div class="char red"></div>
+    <div class="char red"></div>
+  </div>
+
+  <div class="team" id="blue-team">
+    <div class="char blue"></div>
+    <div class="char blue"></div>
+    <div class="char blue"></div>
+    <div class="char blue"></div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.char').forEach(c => {
+      c.addEventListener('click', () => {
+        c.classList.toggle('gray');
+      });
+    });
+  </script>
 </body>
 </html>
