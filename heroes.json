@@ -1,8 +1,8 @@
 [
-  { "name": "Bomba", "image": "" },
-  { "name": "Dani", "image": "" },
-  { "name": "Bred", "image": "" },
-  { "name": "Franky", "image": "" },
-  { "name": "Allan", "image": "" },
-  { "name": "Teo", "image": "res/heroes/teo.png" }
+  { "name": "Bomba", "image": "res/heroes/bomba.png", "flipped": false },
+  { "name": "Dani", "image": "res/heroes/dani.png", "flipped": false  },
+  { "name": "Bred", "image": "", "flipped": false  },
+  { "name": "Franky", "image": "", "flipped": false  },
+  { "name": "Allan", "image": "", "flipped": false  },
+  { "name": "Teo", "image": "res/heroes/teo.png", "flipped": true  }
 ]

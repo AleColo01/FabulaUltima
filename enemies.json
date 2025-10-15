@@ -1,7 +1,7 @@
 [
-  { "name": "Goblin", "image": "" },
-  { "name": "Goblin Sciamano", "image": "" },
-  { "name": "Umano", "image": "" },
-  { "name": "Lupo", "image": "" },
-  { "name": "Orso", "image": "" }
+  { "name": "Goblin", "image": "", "flipped": false },
+  { "name": "Goblin Sciamano", "image": "", "flipped": false },
+  { "name": "Umano", "image": "", "flipped": false  },
+  { "name": "Lupo", "image": "", "flipped": false },
+  { "name": "Orso", "image": "", "flipped": false }
 ]

@@ -145,6 +145,14 @@
       img.classList.add('char');
       img.style.background = m.image ? `url(${m.image}) center/cover no-repeat` : color;
 
+      // Dimensione doppia se c'è immagine
+      if (m.image) img.dataset.big = "true";
+
+      // Flip orizzontale se specificato nel JSON
+      if (m.flipped) {
+        img.style.transform = "scaleX(-1)";
+      }
+
       img.addEventListener('click', () => img.classList.toggle('gray'));
 
       const name = document.createElement('div');
@@ -224,10 +232,14 @@
       const maxCircles = 15;
       const gap = 20; // gap tra cerchi
       const padding = window.innerWidth * 0.2; // 10% per lato
-      const size = Math.min(60, Math.max(30, (window.innerWidth - padding - gap*(maxCircles-1)) / maxCircles));
+      const baseSize = Math.min(60, Math.max(30, (window.innerWidth - padding - gap*(maxCircles-1)) / maxCircles));
+
       document.querySelectorAll('.char').forEach(c => {
-        c.style.width = size + 'px';
-        c.style.height = size + 'px';
+        if (c.dataset.big === "true") {
+          c.style.width = c.style.height = (baseSize*2) + 'px';
+        } else {
+          c.style.width = c.style.height = baseSize + 'px';
+        }
       });
     }
 
