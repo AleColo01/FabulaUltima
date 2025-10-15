@@ -1,6 +1,7 @@
 [
-  { "name": "Enemy1", "image": "" },
-  { "name": "Enemy2", "image": "" },
-  { "name": "Enemy3", "image": "" },
-  { "name": "Enemy4", "image": "" }
+  { "name": "Goblin", "image": "" },
+  { "name": "GoblinSciamano", "image": "" },
+  { "name": "Umano", "image": "" },
+  { "name": "Lupo", "image": "" },
+  { "name": "Orso", "image": "" }
 ]

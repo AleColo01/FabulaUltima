@@ -9,17 +9,19 @@
       height: 100vh;
       display: flex;
       justify-content: space-between;
-      align-items: flex-end; /* allinea i team in basso */
+      align-items: flex-end;
       padding: 0 10%;
-      padding-bottom: 10%; /* distanza dal fondo */
+      padding-bottom: 10%;
       transition: background-color 0.3s, background-image 0.3s;
+      position: relative;
     }
 
     .team {
       display: flex;
-      flex-direction: row; /* da colonna a riga */
-      gap: 20px; /* spazio tra i personaggi */
+      flex-direction: row;
+      gap: 20px;
     }
+
     .char {
       width: 60px;
       height: 60px;
@@ -27,67 +29,156 @@
       cursor: pointer;
     }
     .gray { background: gray !important; }
+
+    /* Impostazioni */
+    #settings-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    #settings-modal {
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      padding: 20px;
+      display: none;
+      border-radius: 8px;
+      max-width: 250px;
+      z-index: 100;
+    }
+
+    #settings-modal h3 { margin-top: 0; font-size: 16px; }
+    #settings-modal label { display: block; margin: 4px 0; cursor: pointer; }
   </style>
 </head>
 <body>
-  <div class="team" id="enemies"></div>
-  <div class="team" id="heroes"></div>
+  <div id="enemies" class="team"></div>
+  <div id="heroes" class="team"></div>
+
+  <div id="settings-btn">⚙️</div>
+  <div id="settings-modal">
+    <h3>Background</h3>
+    <div id="bg-options"></div>
+    <h3>Eroi</h3>
+    <div id="hero-options"></div>
+    <h3>Nemici</h3>
+    <div id="enemy-options"></div>
+  </div>
 
   <script>
-    // ---------- BACKGROUND ----------
-    async function loadBackground(configPath) {
-      const res = await fetch(configPath);
-      const backgrounds = await res.json();
-      const bg = backgrounds[0]; // default primo
+    let heroesData = [];
+    let enemiesData = [];
+    let backgroundsData = [];
+    let selectedBackground = 0;
 
+    async function loadJSON(path) {
+      const res = await fetch(path);
+      return await res.json();
+    }
+
+    async function init() {
+      heroesData = await loadJSON('heroes.json');
+      enemiesData = await loadJSON('enemies.json');
+      backgroundsData = await loadJSON('background.json');
+
+      // Default background
+      applyBackground(0);
+
+      // Render settings
+      renderSettings();
+
+      // Render team
+      renderTeams();
+    }
+
+    function applyBackground(index) {
+      const bg = backgroundsData[index];
+      selectedBackground = index;
       if (bg.image) {
         document.body.style.background = `url(${bg.image}) center/cover no-repeat`;
       } else {
         const colors = { wood: '#2ecc71', cave: '#7f8c8d' };
         document.body.style.backgroundColor = colors[bg.name] || '#2ecc71';
+        document.body.style.backgroundImage = '';
       }
     }
 
-    loadBackground('background.json');
+    function renderTeams() {
+      const heroesContainer = document.getElementById('heroes');
+      const enemiesContainer = document.getElementById('enemies');
+      heroesContainer.innerHTML = '';
+      enemiesContainer.innerHTML = '';
 
-    // ---------- TEAM ----------
-    async function loadTeam(containerId, configPath, color) {
-      const container = document.getElementById(containerId);
-      const res = await fetch(configPath);
-      const members = await res.json();
+      // Mostra solo quelli selezionati
+      heroesData.filter(h => h.show !== false).forEach(m => addChar(heroesContainer, m, 'blue'));
+      enemiesData.filter(e => e.show !== false).forEach(m => addChar(enemiesContainer, m, 'red'));
+    }
 
-      members.forEach(m => {
-        const div = document.createElement('div');
-        div.style.display = 'flex';
-        div.style.flexDirection = 'column';
-        div.style.alignItems = 'center';
-        div.style.gap = '4px';
+    function addChar(container, m, color) {
+      const div = document.createElement('div');
+      div.style.display = 'flex';
+      div.style.flexDirection = 'column';
+      div.style.alignItems = 'center';
+      div.style.gap = '4px';
 
-        const img = document.createElement('div');
-        img.classList.add('char');
-        if (m.image) {
-          img.style.background = `url(${m.image}) center/cover no-repeat`;
-          img.style.border = '2px solid #000';
-        } else {
-          img.style.background = color;
-        }
+      const img = document.createElement('div');
+      img.classList.add('char');
+      img.style.background = m.image ? `url(${m.image}) center/cover no-repeat` : color;
 
-        img.addEventListener('click', () => img.classList.toggle('gray'));
+      img.addEventListener('click', () => img.classList.toggle('gray'));
 
-        const name = document.createElement('div');
-        name.textContent = m.name;
-        name.style.color = '#fff';
-        name.style.fontSize = '14px';
-        name.style.textShadow = '1px 1px 2px black';
+      const name = document.createElement('div');
+      name.textContent = m.name;
+      name.style.color = '#fff';
+      name.style.fontSize = '14px';
+      name.style.textShadow = '1px 1px 2px black';
 
-        div.appendChild(img);
-        div.appendChild(name);
-        container.appendChild(div);
+      div.appendChild(img);
+      div.appendChild(name);
+      container.appendChild(div);
+    }
+
+    function renderSettings() {
+      // Toggle modal
+      document.getElementById('settings-btn').onclick = () => {
+        const modal = document.getElementById('settings-modal');
+        modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+      };
+
+      const bgContainer = document.getElementById('bg-options');
+      bgContainer.innerHTML = '';
+      backgroundsData.forEach((bg, i) => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="bg" ${i===0?'checked':''}> ${bg.name}`;
+        label.querySelector('input').onclick = () => { applyBackground(i); };
+        bgContainer.appendChild(label);
+      });
+
+      const heroContainer = document.getElementById('hero-options');
+      heroContainer.innerHTML = '';
+      heroesData.forEach((h, i) => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" ${h.show!==false?'checked':''}> ${h.name}`;
+        label.querySelector('input').onchange = (e) => { h.show = e.target.checked; renderTeams(); };
+        heroContainer.appendChild(label);
+      });
+
+      const enemyContainer = document.getElementById('enemy-options');
+      enemyContainer.innerHTML = '';
+      enemiesData.forEach((e, i) => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" ${e.show!==false?'checked':''}> ${e.name}`;
+        label.querySelector('input').onchange = (e2) => { e.show = e2.target.checked; renderTeams(); };
+        enemyContainer.appendChild(label);
       });
     }
 
-    loadTeam('heroes', 'heroes.json', 'blue');
-    loadTeam('enemies', 'enemies.json', 'red');
+    init();
   </script>
 </body>
 </html>

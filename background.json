@@ -1,4 +1,4 @@
 [
   { "name": "village", "image": "res/background/village.gif" },
-  { "name": "cave", "image": "" }
+  { "name": "cave", "image": "res/background/cave.gif" }
 ]
